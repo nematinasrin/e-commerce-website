@@ -1,0 +1,300 @@
+{% load static %}
+
+<html lang="fa" dir="rtl">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+
+        <title>Shop Homepage - Start Bootstrap Template</title>
+
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'products/assets/favicon.ico' %}" />
+
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+              rel="stylesheet">
+
+        <!-- CSS خودت -->
+        <link href="{% static 'products/css/styles.css' %}" rel="stylesheet" />
+    </head>
+
+    <body>
+
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            <div class="container px-4 px-lg-5">
+
+                <a class="navbar-brand fw-bold" href="#!">
+                    Start Bootstrap
+                </a>
+
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+
+                        <li class="nav-item">
+                            <a class="nav-link active"
+                               aria-current="page"
+                               href="{% url 'home' %}">
+                                صفحه اصلی
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               href="{% url 'sale' %}">
+                                تخفیف ویژه
+                            </a>
+                        </li>
+
+                    {% if user.is_authenticated %}
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                            href="{% url 'logout' %}">
+                                خروج
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown my-profile">
+
+                            <a
+                                href="#"
+                                class="nav-link dropdown-toggle profile-button"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+
+                                پروفایل
+
+                            </a>
+
+                            <ul class="dropdown-menu profile-menu">
+
+                                <li>
+                                    <a class="dropdown-item"
+                                    href="{% url 'update_user' %}">
+                                        ویرایش پروفایل
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item"
+                                    href="{% url 'update_password' %}">
+                                        ویرایش رمز عبور
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item"
+                                    href="{% url 'update_info' %}">
+                                        تکمیل اطلاعات
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+                    {% else %}
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                            href="{% url 'login' %}">
+                                ورود
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                            href="{% url 'register' %}">
+                                ثبت نام
+                            </a>
+                        </li>
+
+                    {% endif %}
+
+
+                    <!-- سفارشات من -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                        href="{% url 'my_orders' %}">
+
+                            سفارشات من
+
+                        </a>
+
+                    </li>
+                        <!-- دسته بندی -->
+
+                        <li class="nav-item dropdown">
+
+                            <a
+                                class="nav-link dropdown-toggle"
+                                id="navbarDropdown"
+                                href="{% url 'catpage' %}"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+
+                                دسته بندی
+
+                            </a>
+
+                            <ul class="dropdown-menu"
+                                aria-labelledby="navbarDropdown">
+
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url 'category' 'laptop' %}">
+                                        Laptop
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url 'category' 'smart-watch' %}">
+                                        Smart Watch
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url 'category' 'tablet' %}">
+                                        Tablet
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url 'category' 'headset' %}">
+                                        Headset
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url 'category' 'phone' %}">
+                                        Phone
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+                    </ul>
+
+
+                    <!-- Cart -->
+
+                    <a
+                        class="btn btn-outline-dark d-flex align-items-center gap-2"
+                        href="{% url 'cart_summary' %}">
+
+                        <i class="bi-cart-fill"></i>
+
+                        <span>Cart</span>
+
+                        <span
+                            class="badge bg-dark text-white rounded-pill"
+                            id="cart_quantity">
+
+                            {{ cart|length }}
+
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
+        </nav>
+
+
+        <!-- Messages -->
+
+        {% if messages %}
+
+            <div class="container mt-3">
+
+                {% for message in messages %}
+
+                    <div
+                        class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                        role="alert">
+
+                        {{ message }}
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close">
+                        </button>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- Content -->
+
+        <main class="min-vh-100">
+
+            {% block content %}
+            {% endblock %}
+
+        </main>
+
+
+        <!-- Footer-->
+
+        <footer class="py-5 bg-dark mt-auto">
+
+            <div class="container">
+
+                <p class="m-0 text-center text-white">
+
+                    Copyright &copy; Your Website 2023
+
+                </p>
+
+            </div>
+
+        </footer>
+
+
+        <!-- Bootstrap JavaScript -->
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+        </script>
+
+    </body>
+</html>

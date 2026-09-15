@@ -1,0 +1,393 @@
+{% extends "products/base.html" %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="fw-bold mb-0">
+            🛒 سبد خرید
+        </h2>
+
+        <span class="badge bg-dark fs-6">
+            {{ cart|length }} محصول
+        </span>
+
+    </div>
+
+
+    {% if cart %}
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-dark text-white">
+
+                <h5 class="mb-0">
+                    محصولات موجود در سبد خرید
+                </h5>
+
+            </div>
+
+
+            <div class="card-body p-0">
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover table-bordered align-middle text-center mb-0">
+
+                        <thead class="table-dark">
+
+                            <tr>
+
+                                <th>تصویر</th>
+
+                                <th>نام محصول</th>
+
+                                <th>قیمت</th>
+
+                                <th>تعداد</th>
+
+                                <th>عملیات</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                        {% for item in cart %}
+
+                            <tr>
+
+                                <!-- تصویر -->
+
+                                <th scope="row">
+
+                                    <img
+                                        src="{{ item.picture.url }}"
+                                        alt="{{ item.name }}"
+                                        width="90"
+                                        height="60"
+                                        class="rounded object-fit-cover"
+                                    >
+
+                                </th>
+
+
+                                <!-- نام -->
+
+                                <td class="fw-semibold">
+
+                                    {{ item.name }}
+
+                                </td>
+
+
+                                <!-- قیمت -->
+
+                                <td>
+
+                                    <span class="fw-semibold">
+
+                                        {{ item.price }}
+
+                                    </span>
+
+                                    تومان
+
+                                </td>
+
+
+                                <!-- تعداد -->
+
+                                <td>
+
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+
+                                        <button
+                                            type="button"
+                                            data-index="{{ item.id }}"
+                                            class="btn btn-sm btn-danger update-cart"
+                                            data-action="minus">
+
+                                            −
+
+                                        </button>
+
+
+                                        <span
+                                            id="qty-{{ item.id }}"
+                                            class="badge bg-dark fs-6 px-3">
+
+                                            {% for key, value in quantities.items %}
+
+                                                {% if key == item.id|slugify %}
+
+                                                    {{ value }}
+
+                                                {% endif %}
+
+                                            {% endfor %}
+
+                                        </span>
+
+
+                                        <button
+                                            type="button"
+                                            data-index="{{ item.id }}"
+                                            class="btn btn-sm btn-success update-cart"
+                                            data-action="plus">
+
+                                            +
+
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- حذف -->
+
+                                <td>
+
+                                    <button
+                                        type="button"
+                                        data-index="{{ item.id }}"
+                                        class="btn btn-sm btn-danger delete-item"
+                                        title="حذف از سبد خرید">
+
+                                        <i class="bi bi-trash"></i>
+
+                                        حذف
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- مجموع قیمت -->
+
+        <div class="card border-success shadow-sm mt-4">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <h4 class="mb-0">
+                        مبلغ کل
+                    </h4>
+
+                    <span class="fw-bold text-success fs-4">
+
+                        {{ total_price }} تومان
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ادامه خرید -->
+
+        <div class="d-flex justify-content-end mt-4">
+
+            <a
+                href="{% url 'chek' %}"
+                class="btn btn-success btn-lg px-4">
+
+                ادامه
+
+                <i class="bi bi-arrow-left me-2"></i>
+
+            </a>
+
+        </div>
+
+
+    {% else %}
+
+        <!-- سبد خالی -->
+
+        <div class="card shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-cart-x display-1 text-secondary"></i>
+
+                <h4 class="mt-3">
+                    سبد خرید خالی است
+                </h4>
+
+                <p class="text-muted">
+                    هنوز محصولی به سبد خرید خود اضافه نکرده‌اید.
+                </p>
+
+                <a
+                    href="{% url 'home' %}"
+                    class="btn btn-dark mt-2">
+
+                    بازگشت به فروشگاه
+
+                </a>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- JavaScript -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+    $(document).on('click', '.update-cart', function (e) {
+
+        e.preventDefault();
+
+        var productid = $(this).data('index');
+
+        var action = $(this).data('action');
+
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '{% url "cart_update" %}',
+
+            data: {
+
+                product_id: productid,
+
+                update_action: action,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+
+                action: 'post'
+
+            },
+
+            success: function (json) {
+
+                location.reload();
+
+                document.getElementById(
+                    'qty-' + productid
+                ).textContent = json.qty;
+
+                document.getElementById(
+                    'cart_quantity'
+                ).textContent = json.cart_total_qty;
+
+            },
+
+            error: function(xhr, errmsg, err) {
+
+                console.log(
+                    "خطا: " +
+                    xhr.status +
+                    ": " +
+                    xhr.responseText
+                );
+
+            }
+
+        });
+
+    });
+
+
+    $(document).on('click', '.delete-item', function (e) {
+
+        e.preventDefault();
+
+        var button = $(this);
+
+        var productid = button.data('index');
+
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '{% url "cart_delete" %}',
+
+            data: {
+
+                product_id: productid,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+
+                action: 'post'
+
+            },
+
+            success: function (json) {
+
+                location.reload();
+
+                document.getElementById(
+                    'cart_quantity'
+                ).textContent = json.cart_total_qty;
+
+
+                button.closest('tr').remove();
+
+
+                if (json.cart_total_qty == 0) {
+
+                    $('table tbody').html(
+
+                        '<tr>' +
+                        '<td colspan="5" class="text-center py-4">' +
+                        'سبد خرید شما خالی است.' +
+                        '</td>' +
+                        '</tr>'
+
+                    );
+
+                }
+
+            },
+
+            error: function(xhr, errmsg, err) {
+
+                console.log(
+                    "خطا در حذف آیتم: " +
+                    xhr.status
+                );
+
+            }
+
+        });
+
+    });
+
+</script>
+
+{% endblock %}

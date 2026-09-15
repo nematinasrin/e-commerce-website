@@ -1,0 +1,23 @@
+{% extends 'products/base.html' %}
+{% block content %}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+        <h2 class="mb-4">ویرایش اطلاعات تکمیلی
+
+        </h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ user_form.as_p }}
+            <button
+            type="submit"
+            class="btn btn-primary"
+            >ذخیره تغییرات
+
+            </button>
+        </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
